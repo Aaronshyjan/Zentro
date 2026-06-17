@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:match*",
-      "destination": "https://zentro-tqxh.onrender.com"
+      "destination": "https://zentro-tqxh.onrender.com/api/:match*"
     }
   ]
 }
