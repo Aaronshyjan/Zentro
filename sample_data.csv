@@ -1,0 +1,7 @@
+order_id,customer_name,email,phone,country_code,order_date,amount,payment_mode,product_id,product_name,quantity
+ORD-001,John Doe,john@test.com,5551234567,US,2023-01-01,100,CC,PROD-1,Widget,2
+ORD-002,Jane Smith,jane@test.com,9876543210,US,2023-01-02,200,UPI,PROD-2,Gadget,1
+ORD-003,Bob Jones,bob@test.com,1112223333,US,2023-01-03,300,CC,PROD-3,Thing,3
+ORD-004,Alice Brown,alice@test.com,4445556666,US,2023-01-04,400,CC,PROD-1,Widget,4
+ORD-005,Charlie White,charlie@test.com,7778889999,US,2023-01-05,500,UPI,PROD-2,Gadget,5
+ORD-006,Invalid User,bademail,123,,bad-date,abc,,PROD-1,,

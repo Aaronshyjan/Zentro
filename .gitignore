@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.py[cod]
+
+# Data and Outputs
+uploads/
+outputs/
+*.csv
+*.xlsx
+*.db
+*.log

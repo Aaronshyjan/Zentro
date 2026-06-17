@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zentro</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- DataTables Core CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="logo">
+            <div class="logo-dot"></div>
+            ZENTRO.
+        </div>
+        <button id="theme-toggle" style="background: transparent; border: none; font-size: 20px; color: var(--fg); cursor: pointer;" title="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" style="min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-bottom: 80px;" class="reveal active">
+            <h1 style="font-size: 72px; line-height: 1; margin-bottom: 24px; letter-spacing: 2px;">
+                <span id="hero-typewriter"></span><span class="blinking-cursor" style="display: inline-block; width: 2px; border-right: 2px solid var(--accent); height: 60px; vertical-align: bottom;"></span>
+            </h1>
+            <style>
+                .blinking-cursor {
+                    animation: blink 1s step-end infinite;
+                }
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0; }
+                }
+            </style>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const text = "ZENTRO.";
+                    const speed = 150;
+                    const el = document.getElementById('hero-typewriter');
+                    let i = 0;
+                    setTimeout(function type() {
+                        if (i < text.length) {
+                            el.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(type, speed);
+                        }
+                    }, 400); // small delay before typing starts
+                });
+            </script>
+            <h2 class="mono text-muted" style="font-size: 18px; margin-bottom: 16px; max-width: 600px; margin-left: auto; margin-right: auto;">A MINIMALIST DATA VALIDATION PROTOCOL.</h2>
+           
+            <a href="#dashboard" class="btn btn-accent" style="height: 56px; font-size: 18px; padding: 0 48px; margin-bottom: 32px;">[ GET STARTED ] ></a>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" style="scroll-margin-top: 100px;">
+            <h2 class="section-title">DASHBOARD</h2>
+            <div class="stats-grid">
+                <div class="stat-card glass-panel">
+                    <div class="stat-num" id="stat-files">0</div>
+                    <div class="stat-label">FILES UPLOADED</div>
+                </div>
+                <div class="stat-card glass-panel">
+                    <div class="stat-num" id="stat-total">0</div>
+                    <div class="stat-label">RECORDS PROCESSED</div>
+                </div>
+                <div class="stat-card glass-panel accent-border">
+                    <div class="stat-num accent-text" id="stat-invalid">0</div>
+                    <div class="stat-label">VALIDATION ERRORS</div>
+                </div>
+                <div class="stat-card glass-panel">
+                    <div class="stat-num" id="stat-clean">0</div>
+                    <div class="stat-label">CLEAN FILES GENERATED</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-layout">
+            <!-- Left Column -->
+            <div class="left-col">
+                <!-- File Upload -->
+                <section class="panel glass-panel" id="upload" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header">[ UPLOAD_DATASET ]</h2>
+                    <div class="panel-body">
+                        <div class="upload-area glass" id="dropArea">
+                            <i class="fa-solid fa-cloud-arrow-up fa-3x mb-2 text-muted"></i>
+                            <h3 class="mono mt-2">DRAG & DROP CSV OR XLSX HERE</h3>
+                            <p class="mono text-muted mt-2">OR</p>
+                            <input type="file" id="fileInput" multiple accept=".csv,.xlsx" style="display: none;">
+                            <button class="btn btn-accent mt-2" onclick="document.getElementById('fileInput').click()">[ BROWSE_FILES ] ></button>
+                        </div>
+
+                        <div id="uploadProgressContainer" class="hidden mt-4">
+                            <div class="flex-between mono mb-2" style="font-size: 12px;">
+                                <span id="uploadFileName">data.csv</span>
+                                <span id="uploadFileSize" class="text-muted">0 MB</span>
+                                <span id="uploadPercent" class="accent-text">0%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="uploadProgressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Dataset Preview -->
+                <section class="panel glass-panel mt-4" id="preview" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header flex-between">
+                        <span>[ DATASET_PREVIEW ]</span>
+                        <button class="btn-sm btn-accent" id="btnValidateData">[ VALIDATE_DATA ]</button>
+                    </h2>
+                    <div class="panel-body p-0" style="overflow-x: auto; max-height: 400px;">
+                        <table id="previewTable" class="brutal-table w-100 dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Country</th>
+                                    <th>Order Date</th>
+                                    <th>Product</th>
+                                    <th>Payment Mode</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Validation Results -->
+                <section class="panel glass-panel mt-4" id="results" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header">[ VALIDATION_RESULTS ]</h2>
+                    <div class="panel-body">
+                        <div class="flex-grid mb-4">
+                            <div class="stat-card" style="flex: 1; padding: 10px;">
+                                <div class="stat-num" style="font-size: 24px;">0</div>
+                                <div class="stat-label">TOTAL RECORDS</div>
+                            </div>
+                            <div class="stat-card" style="flex: 1; padding: 10px;">
+                                <div class="stat-num text-success" style="font-size: 24px;">0</div>
+                                <div class="stat-label">VALID RECORDS</div>
+                            </div>
+                            <div class="stat-card" style="flex: 1; padding: 10px;">
+                                <div class="stat-num text-danger" style="font-size: 24px;">0</div>
+                                <div class="stat-label">INVALID RECORDS</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <button class="btn filter-btn active" data-error-filter="all">ALL ERRORS</button>
+                            <button class="btn filter-btn" data-error-filter="phone">PHONE ERRORS</button>
+                            <button class="btn filter-btn" data-error-filter="date">DATE ERRORS</button>
+                            <button class="btn filter-btn" data-error-filter="duplicate">DUPLICATE ERRORS</button>
+                        </div>
+
+                        <div style="overflow-x: auto; max-height: 300px; border: 1px solid var(--border);">
+                            <table class="brutal-table w-100">
+                                <thead style="position: sticky; top: 0; z-index: 1;">
+                                    <tr>
+                                        <th>Row Number</th>
+                                        <th>Field Name</th>
+                                        <th>Invalid Value</th>
+                                        <th>Error Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Error data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- CSV Splitter -->
+                <section class="panel glass-panel mt-4" id="splitter" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header">[ CSV_SPLITTER ]</h2>
+                    <div class="panel-body">
+                        <div class="flex-between mb-4 flex-wrap" style="gap: 10px;">
+                            <button class="btn" data-split-size="1000"><i class="fa-solid fa-scissors"></i> SPLIT BY 1000 ROWS</button>
+                            <button class="btn" data-split-size="5000"><i class="fa-solid fa-scissors"></i> SPLIT BY 5000 ROWS</button>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="number" id="customSplitSize" min="1" placeholder="Custom Row Count" style="background: transparent; border: 1px solid var(--border); color: var(--fg); padding: 8px; font-family: var(--font-mono); width: 150px;">
+                                <button class="btn btn-accent" id="btnCustomSplit"><i class="fa-solid fa-scissors"></i> SPLIT</button>
+                            </div>
+                        </div>
+                        
+                        <div class="border-top pt-3 mt-3">
+                            <h3 class="mono mb-2" style="font-size: 14px;">GENERATED CHUNKS</h3>
+                            <table class="brutal-table w-100">
+                                <tbody id="csvChunksTableBody">
+                                    <!-- Chunks will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-col">
+                <!-- Validation Processing -->
+                <section class="panel glass-panel" id="processing" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header">[ VALIDATION_PROCESSING ]</h2>
+                    <div class="panel-body">
+                        <div class="progress-track mb-4" style="height: 8px; border-radius: 4px;">
+                            <div class="progress-fill" id="valProgressBar" style="width: 0%; border-radius: 4px; transition: width 0.5s;"></div>
+                        </div>
+                        <div class="stepper" id="valStepper" style="display: flex; flex-direction: column; gap: 12px; border: none; padding-top: 0; margin-top: 0;">
+                            <div class="step flex-between w-100 text-muted" id="step-phone">
+                                <span><i class="fa-regular fa-circle mr-2 icon-status"></i> Phone Number Validation</span>
+                                <span class="mono text-status" style="font-size: 12px;">WAITING</span>
+                            </div>
+                            <div class="step flex-between w-100 text-muted" id="step-date">
+                                <span><i class="fa-regular fa-circle mr-2 icon-status"></i> Date Validation</span>
+                                <span class="mono text-status" style="font-size: 12px;">WAITING</span>
+                            </div>
+                            <div class="step flex-between w-100 text-muted" id="step-dup">
+                                <span><i class="fa-regular fa-circle mr-2 icon-status"></i> Duplicate Check</span>
+                                <span class="mono text-status" style="font-size: 12px;">WAITING</span>
+                            </div>
+                            <div class="step flex-between w-100 text-muted" id="step-miss">
+                                <span><i class="fa-regular fa-circle mr-2 icon-status"></i> Missing Value Check</span>
+                                <span class="mono text-status" style="font-size: 12px;">WAITING</span>
+                            </div>
+                            <div class="step flex-between w-100 text-muted" id="step-pay">
+                                <span><i class="fa-regular fa-circle mr-2 icon-status"></i> Payment Validation</span>
+                                <span class="mono text-status" style="font-size: 12px;">WAITING</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Downloads -->
+                <section class="panel glass-panel mt-4" id="downloads" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header">[ DOWNLOADS ]</h2>
+                    <div class="panel-body" style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="text-muted text-center py-4" style="font-size: 14px;">
+                            Files will appear here after validation.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI Insights -->
+                <section class="panel glass-panel mt-4" id="aiInsights" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header flex-between">
+                        <span>[ AI_INSIGHTS ]</span>
+                        <button class="btn-sm btn-accent" id="btnRefreshAi" disabled><i class="fa-solid fa-wand-magic-sparkles"></i> ANALYZE</button>
+                    </h2>
+                    <div class="panel-body">
+                        <div id="aiInsightsBody" class="ai-insights text-muted">
+                            Validate a dataset to generate AI-powered cleanup guidance.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Validation Rules -->
+                <section class="panel glass-panel mt-4" id="rules" style="scroll-margin-top: 100px;">
+                    <h2 class="panel-header flex-between">
+                        <span>[ VALIDATION_RULES ]</span>
+                        <button class="btn-sm btn-accent" id="btnAddRule"><i class="fa-solid fa-plus"></i> ADD RULE</button>
+                    </h2>
+                    <div class="panel-body p-0">
+                        <table class="brutal-table w-100">
+                            <thead>
+                                <tr>
+                                    <th>Country</th>
+                                    <th>Code</th>
+                                    <th>Length</th>
+                                    <th>Act</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rules will be populated here -->
+                            </tbody>
+                        </table>
+                        <form id="ruleForm" class="rule-form">
+                            <input type="text" id="ruleCountry" placeholder="Country" required>
+                            <input type="text" id="ruleCode" placeholder="Code (+91)" required>
+                            <input type="number" id="ruleLength" placeholder="Length" min="1" required>
+                            <button type="submit" class="btn-sm btn-accent"><i class="fa-solid fa-floppy-disk"></i> SAVE</button>
+                            <button type="button" class="btn-sm hidden" id="btnCancelRule">CANCEL</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div>ZENTRO_ v2.0.0</div>
+        <div class="footer-links">
+            <a href="#">MIT LICENSE</a>
+            <a href="#">NO COOKIES</a>
+            <a href="#">NO TRACKING</a>
+            <a href="#">GITHUB</a>
+        </div>
+    </footer>
+
+
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
