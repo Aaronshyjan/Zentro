@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:match*",
-      "destination": "https://YOUR_RENDER_APP_URL.onrender.com/api/:match*"
+      "destination": "https://zentro-giqk.onrender.com"
     }
   ]
 }
